@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.bignerdranch.android.finalproject374">
+    package="com.bignerdranch.android.finalproject374">
 
     <application
         android:allowBackup="true"
@@ -15,10 +15,6 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <meta-data
-            android:name="com.google.android.maps.API_KEY"
-            android:value="AIzaSyA_OW4Yz3fkYbkmDNvrgnxGzOt__ScovV0"/>
-
     </application>
 
 </manifest>
