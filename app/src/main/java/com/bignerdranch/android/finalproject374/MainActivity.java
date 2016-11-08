@@ -59,6 +59,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
                 //Given the coordinates of the touch we look up the color of a pixel in the hidden image (with the hotspots)
                 int touchColor = getHotspotColor (R.id.image_areas, evX, evY);
+                Log.d(TAG, "touchcolor: " + touchColor);
                 // Compare the touchColor to the expected values.
 
                 // We use a Color Tool object to test whether the
@@ -67,16 +68,16 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
                 // TODO:  start a different fragment, depending on what color was touched.
                 ColorTool ct = new ColorTool();
-                int tolerance = 25;
+                int tolerance = 40;
 
-                if (ct.closeMatch (Color.RED, touchColor, tolerance)) {
+                if (ct.closeMatch (-3079405, touchColor, tolerance)) {
                     // open RKC Fragment
                     toast(rkcToast);
                     Log.d(TAG, rkcToast);
 
                 }
 
-                else if (ct.closeMatch (Color.YELLOW, touchColor, tolerance))
+                else if (ct.closeMatch (-802735, touchColor, tolerance))
                 {
                     //open Olin Fragment
                     toast(olinToast);
@@ -96,6 +97,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     }
 
     public int getHotspotColor (int hotspotId, int x, int y) {
+        Log.d(TAG, "called getHotspotColor");
         ImageView img = (ImageView) findViewById (hotspotId);
         img.setDrawingCacheEnabled(true);
         Bitmap hotspots = Bitmap.createBitmap(img.getDrawingCache());
