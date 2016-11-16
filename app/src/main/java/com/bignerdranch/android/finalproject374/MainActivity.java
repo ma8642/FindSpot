@@ -1,8 +1,10 @@
-
 package com.bignerdranch.android.finalproject374;
 
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MotionEvent;
@@ -15,96 +17,22 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 
-public class MainActivity extends AppCompatActivity implements View.OnTouchListener {
+public class MainActivity extends FragmentActivity {
 
-    String TAG = "mainActivityString";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        ImageView iv = (ImageView) findViewById(R.id.campus_map);
-        if (iv != null) {
-            iv.setOnTouchListener (this);
+        FragmentManager fm = getSupportFragmentManager();
+        Fragment fragment = fm.findFragmentById(R.id.fragment_container);
+
+        if (fragment == null) {
+            fragment = new MainFragment();
+            fm.beginTransaction()
+                    .add(R.id.fragment_container, fragment)
+                    .commit();
         }
-        toast("Select a building");
     }
-
-    public boolean onTouch (View v, MotionEvent ev) {
-        //Log.d(TAG, "Touched Screen!");
-
-        boolean handledHere = false;
-        final int action = ev.getAction();
-
-        //Here we get the coordinates of the user's touch point
-        final int evX = (int) ev.getX();
-        final int evY = (int) ev.getY();
-
-        String olinToast = "OPEN OLIN FRAGMENT";
-        String rkcToast = "OPEN RKC FRAGMENT";
-
-        // If we cannot find the imageView, return.
-        ImageView imageView = (ImageView) v.findViewById (R.id.campus_map);
-        if (imageView == null) return false;
-
-
-
-        switch (action) {
-            case MotionEvent.ACTION_DOWN :
-                Log.d(TAG, "ACTION_DOWN");
-                // The hidden image (image_areas) has two different hotspots on it.
-                // The colors are red (rkc) and yellow (olin).
-                // Use image_areas to determine which region the user touched.
-
-                //Given the coordinates of the touch we look up the color of a pixel in the hidden image (with the hotspots)
-                int touchColor = getHotspotColor (R.id.image_areas, evX, evY);
-                // Compare the touchColor to the expected values.
-
-                // We use a Color Tool object to test whether the
-                // observed color is close enough to the real color to
-                // count as a match.
-
-                // TODO:  start a different fragment, depending on what color was touched.
-                ColorTool ct = new ColorTool();
-                int tolerance = 25;
-
-                if (ct.closeMatch (Color.RED, touchColor, tolerance)) {
-                    // open RKC Fragment
-                    toast(rkcToast);
-                    Log.d(TAG, rkcToast);
-
-                }
-
-                else if (ct.closeMatch (Color.YELLOW, touchColor, tolerance))
-                {
-                    //open Olin Fragment
-                    toast(olinToast);
-                    Log.d(TAG, olinToast);
-                }
-                handledHere = true;
-                break;
-
-            case MotionEvent.ACTION_UP :
-                Log.d(TAG, "ACTION_UP");
-                break;
-
-            default:
-                handledHere = false;
-        } // end switch
-        return handledHere;
-    }
-
-    public int getHotspotColor (int hotspotId, int x, int y) {
-        ImageView img = (ImageView) findViewById (hotspotId);
-        img.setDrawingCacheEnabled(true);
-        Bitmap hotspots = Bitmap.createBitmap(img.getDrawingCache());
-        img.setDrawingCacheEnabled(false);
-        return hotspots.getPixel(x, y);
-    }
-
-    public void toast(String msg)
-    {
-        Toast.makeText (getApplicationContext(), msg, Toast.LENGTH_LONG).show();
-    } // end toast
 }
