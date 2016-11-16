@@ -1,4 +1,4 @@
-package com.example.wren.chancemarley;
+package com.bignerdranch.android.finalproject374;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
