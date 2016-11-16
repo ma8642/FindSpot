@@ -46,7 +46,7 @@ public class MainFragment extends Fragment implements OnTouchListener {
     public boolean onTouch(View v, MotionEvent ev) {
         Log.d(TAG, "Touched Screen!");
 
-        boolean handledHere = false;
+        boolean returnMe = false;
         final int action = ev.getAction();
 
         //Here we get the coordinates of the user's touch point
@@ -61,49 +61,34 @@ public class MainFragment extends Fragment implements OnTouchListener {
         if (imageView == null) return false;
 
         switch (action) {
-            case MotionEvent.ACTION_DOWN :
-                Log.d(TAG, "ACTION_DOWN");
-                // The hidden image (image_areas) has two different hotspots on it.
-                // The colors are red (rkc) and yellow (olin).
-                // Use image_areas to determine which region the user touched.
+            case MotionEvent.ACTION_DOWN :  //The hidden image (image_areas) has two different hotspots on it.  The colors are red (rkc) and yellow (olin).
 
                 //Given the coordinates of the touch we look up the color of a pixel in the hidden image (with the hotspots)
                 int touchColor = getHotspotColor (R.id.image_areas, evX, evY);
-                Log.d(TAG, "touchcolor: " + touchColor);
+
                 // Compare the touchColor to the expected values.
-
-                // We use a Color Tool object to test whether the
-                // observed color is close enough to the real color to
-                // count as a match.
-
-                // TODO:  start a different fragment, depending on what color was touched.
-                ColorTool ct = new ColorTool();
+                ColorTool ct = new ColorTool();  // We use a Color Tool object to test whether the observed color is close enough to the real color to count as a match.
                 int tolerance = 40;
 
-                if (ct.closeMatch (-3079405, touchColor, tolerance)) {
+                if (ct.closeMatch (-3079405, touchColor, tolerance))
+                {
                     // open RKC Fragment
                     toast(rkcToast);
-                    Log.d(TAG, rkcToast);
-
                 }
 
                 else if (ct.closeMatch (-802735, touchColor, tolerance))
                 {
                     //open Olin Fragment
                     toast(olinToast);
-                    Log.d(TAG, olinToast);
                 }
-                handledHere = true;
-                break;
 
-            case MotionEvent.ACTION_UP :
-                Log.d(TAG, "ACTION_UP");
+                returnMe = true;
                 break;
 
             default:
-                handledHere = false;
+                returnMe = false;
         } // end switch
-        return handledHere;
+        return returnMe;
     }
 
 
@@ -117,8 +102,8 @@ public class MainFragment extends Fragment implements OnTouchListener {
     }
 
 
-    public void toast(String msg)
+    public void toast(String msg)  //make toast
     {
-        Toast.makeText (getActivity(), msg, Toast.LENGTH_LONG).show();
+        Toast.makeText (getActivity(), msg, Toast.LENGTH_SHORT).show();
     } // end toast
 }
