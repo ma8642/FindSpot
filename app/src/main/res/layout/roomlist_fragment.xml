@@ -3,17 +3,10 @@
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent">
-    <EditText
-        android:id="@+id/txtsearch"
+
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/cardList"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Search"/>
-
-    <ListView
-        android:id="@+id/listview"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-    </ListView>
-
+        android:layout_height="match_parent"/>
 </LinearLayout>

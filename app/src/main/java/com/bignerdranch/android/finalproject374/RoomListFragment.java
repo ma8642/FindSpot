@@ -1,86 +1,75 @@
 package com.bignerdranch.android.finalproject374;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Adapter;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by Wren on 11/7/2016.
  */
 
 public class RoomListFragment extends Fragment {
-    String[] items;
-    ArrayList<String> listItems;
-    ArrayAdapter<String> adapter;
-    ListView listView;
-    EditText editText;
+
+    public String [] ItemData;
+    public Adapter mAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.roomlist_fragment, parent, false);
+        View rootView = inflater.inflate(R.layout.roomlist_fragment, parent, false);
+        // 1. get a reference to recyclerView
+        RecyclerView roomList = (RecyclerView) rootView.findViewById(R.id.cardList);
+        // 2. set layoutManger
+        roomList.setLayoutManager(new LinearLayoutManager(getActivity()));
+        roomList.setHasFixedSize(true);
+        RoomAdapter ra = new RoomAdapter(createList(20));
+        roomList.setAdapter(ra);
+
+        return rootView;
     }
 
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        listView = (ListView) view.findViewById(R.id.listview);
-        editText = (EditText) view.findViewById(R.id.txtsearch);
-        initList();
-        editText.addTextChangedListener(new TextWatcher() {
 
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
 
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (s.toString().equals("")) {
-                    // reset listview
-                    initList();
-                } else {
-                    // perform search
-                    searchItem(s.toString());
-                }
-            }
 
-            @Override
-            public void afterTextChanged(Editable s) {
-            }
+//DUMMY FUNCTION TO POPULATE RECYCLER VIEW ROOM LIST
+    private List<RoomInfo> createList(int size) {
 
-        });
-    }
+        List<RoomInfo> result = new ArrayList<RoomInfo>();
+        for (int i=1; i <= size; i++) {
+            RoomInfo ri = new RoomInfo();
+            ri.room = RoomInfo.Room_PREFIX ;
+            ri.professor = RoomInfo.Professor_PREFIX ;
+            ri.professor2 = RoomInfo.Professor2_PREFIX ;
+            ri.className = RoomInfo.ClassName_PREFIX ;
+            ri.time = RoomInfo.TIME_PREFIX ;
 
-    public void searchItem(String textToSearch) {
+            result.add(ri);
 
-        for (String item : items) {
-            if (!item.contains(textToSearch)) {
-                listItems.remove(item);
-            }
         }
 
-        adapter.notifyDataSetChanged();
-
+        return result;
     }
 
-    public void initList() {
-        items = new String[]{"Olin 101", "Olin 102", "Olin 103",
-                "Olin 104", "Olin 105", "RKC 100", "RKC 107"
-                , "RKC 200"};
-        listItems = new ArrayList<>(Arrays.asList(items));
-        adapter = new ArrayAdapter<String>(super.getContext(), R.layout.list_item, R.id.txtitem, listItems);
-        listView.setAdapter(adapter);
 
-    }
 }
 
 
