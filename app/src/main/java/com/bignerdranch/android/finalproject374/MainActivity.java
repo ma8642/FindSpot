@@ -1,4 +1,3 @@
-
 package com.bignerdranch.android.finalproject374;
 
 import android.graphics.Bitmap;

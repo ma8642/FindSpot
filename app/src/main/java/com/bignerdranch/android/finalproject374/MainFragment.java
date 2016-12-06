@@ -1,10 +1,12 @@
 package com.bignerdranch.android.finalproject374;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.BundleCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -74,12 +76,18 @@ public class MainFragment extends Fragment implements OnTouchListener {
                 {
                     // open RKC Fragment
                     toast(rkcToast);
+                    Intent i = new Intent(getActivity(), RoomListActivity.class);
+                    startActivity(i);
+
                 }
 
                 else if (ct.closeMatch (-802735, touchColor, tolerance))
                 {
                     //open Olin Fragment
                     toast(olinToast);
+
+                    Intent i = new Intent(getActivity(), RoomListActivity.class);
+                    startActivity(i);
                 }
 
                 returnMe = true;
