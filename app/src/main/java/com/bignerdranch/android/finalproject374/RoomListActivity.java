@@ -13,11 +13,13 @@ import android.view.MenuItem;
  */
 
 public class RoomListActivity extends AppCompatActivity {
+    public String roomName;
+
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_item);
-        getSupportActionBar().setTitle("MAKE NEW TITLE");
+        getSupportActionBar().setTitle(getIntent().getStringExtra("extra"));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.add(R.id.listview_fragment_container, new RoomListFragment());

@@ -49,6 +49,9 @@ private List<RoomInfo> roomInfoList;
         return new RoomViewHolder(itemView);
     }
 
+    //Display Recyler View List of FreeRooma
+
+
 
     public static class RoomViewHolder extends RecyclerView.ViewHolder {
         protected TextView vRoom;

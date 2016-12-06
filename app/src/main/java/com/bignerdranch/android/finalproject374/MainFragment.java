@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 import android.view.View.OnTouchListener;
 
+
 /**
  * Created by cs374 on 11/8/16.
  */
@@ -77,6 +78,7 @@ public class MainFragment extends Fragment implements OnTouchListener {
                     // open RKC Fragment
                     toast(rkcToast);
                     Intent i = new Intent(getActivity(), RoomListActivity.class);
+                    i.putExtra("extra","RKC");
                     startActivity(i);
 
                 }
@@ -87,6 +89,8 @@ public class MainFragment extends Fragment implements OnTouchListener {
                     toast(olinToast);
 
                     Intent i = new Intent(getActivity(), RoomListActivity.class);
+                    i.putExtra("extra","OLIN");
+                    //roomName = "Olin";
                     startActivity(i);
                 }
 
