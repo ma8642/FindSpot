@@ -18,29 +18,53 @@ import android.view.View.OnTouchListener;
 
 
 /**
- * Created by cs374 on 11/8/16.
+ * Created by Alford on 11/8/16.
  */
 
 public class MainFragment extends Fragment implements OnTouchListener {
     //Context context;
 
     String TAG = "mainFragmentString";
+    private static final String KEY_INDEX = "index"; //to help retain data across rotation
+    private static final String KEY_SHOWN = "shown";
+    private String buildingClicked;
+    private boolean toastShown;  //says whether welcome toast has been displayed once or not
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //retain this fragment
+        setRetainInstance(true);
+        toastShown = false;
+    }
+
+    public void setBuildingClicked(String building) {
+        this.buildingClicked = building;
+    }
+
+    public String getBuildingClicked() {
+        return buildingClicked;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstaceState) {
+                             Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_main, container, false);
 
         ImageView image = (ImageView) v.findViewById(R.id.campus_map);
 
         image.setOnTouchListener(this);
+        setBuildingClicked("None");  //user has not clicked a building yet
 
-        toast("Select a building");
+        if (toastShown == false) {
+            toast("Select a building");
+            toastShown = true;
+        }
+
+        if (savedInstanceState != null) {
+            buildingClicked = savedInstanceState.getString(KEY_INDEX);
+            toastShown = savedInstanceState.getBoolean(KEY_SHOWN);
+        }
 
         return v;
     }
@@ -76,9 +100,10 @@ public class MainFragment extends Fragment implements OnTouchListener {
                 if (ct.closeMatch (-3079405, touchColor, tolerance))
                 {
                     // open RKC Fragment
+                    setBuildingClicked("RKC");
                     toast(rkcToast);
                     Intent i = new Intent(getActivity(), RoomListActivity.class);
-                    i.putExtra("extra","RKC");
+                    i.putExtra("extra", buildingClicked);
                     startActivity(i);
 
                 }
@@ -86,10 +111,11 @@ public class MainFragment extends Fragment implements OnTouchListener {
                 else if (ct.closeMatch (-802735, touchColor, tolerance))
                 {
                     //open Olin Fragment
+                    setBuildingClicked("OLIN");
                     toast(olinToast);
 
                     Intent i = new Intent(getActivity(), RoomListActivity.class);
-                    i.putExtra("extra","OLIN");
+                    i.putExtra("extra", buildingClicked);
                     //roomName = "Olin";
                     startActivity(i);
                 }
@@ -118,4 +144,12 @@ public class MainFragment extends Fragment implements OnTouchListener {
     {
         Toast.makeText (getActivity(), msg, Toast.LENGTH_SHORT).show();
     } // end toast
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        Log.i(TAG, "onSaveInstanceState");
+        savedInstanceState.putString(KEY_INDEX, buildingClicked);
+        savedInstanceState.putBoolean(KEY_SHOWN, toastShown);
+    }
 }
