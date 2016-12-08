@@ -2,6 +2,7 @@ package com.bignerdranch.android.finalproject374;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
@@ -11,16 +12,27 @@ import android.view.MenuItem;
  */
 
 public class RoomListActivity extends AppCompatActivity {
-    public String roomName;
+    public String buildingName;
 
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_item);
-        getSupportActionBar().setTitle(getIntent().getStringExtra("extra"));
+        buildingName = getIntent().getStringExtra("extra");
+        getSupportActionBar().setTitle(buildingName);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        //store building name in a bundle that we will pass to fragment
+        Bundle bundle=new Bundle();
+        bundle.putString("name", buildingName);
+
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.add(R.id.listview_fragment_container, new RoomListFragment());
+
+        Fragment fragment = new RoomListFragment();
+        fragment.setArguments(bundle);
+
+        //create fragment
+        ft.add(R.id.listview_fragment_container, fragment);
         ft.commit();
     }
 

@@ -29,7 +29,7 @@ public class RoomListFragment extends Fragment {
     private Cursor mCursor;
     private Cursor nCursor;
     private RoomAdapter mRoomAdapter;
-    public static String bName;
+    //public static String bName;
     private String buildingClicked;
 
     Integer endHour = 0;
@@ -43,7 +43,7 @@ public class RoomListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup parent, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.roomlist_fragment, parent, false);
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.cardList);
-        buildingClicked = "OLIN";
+        buildingClicked = getArguments().getString("name");
         getBuildingName();
         return rootView;
     }
@@ -51,9 +51,9 @@ public class RoomListFragment extends Fragment {
 
     public int getItemCount() {
         return mRoomArrayList.size();
-    }
+    }  //ARRAYLIST TO POPULATE RECYCLERVIEW
 
-
+    //RETURNS TRUE IF CURRENT TIME IS BEFORE OR AFTER A CLASS TIME
     public boolean chooseRoom(int cHour, int cMin, int startHour, int startMin, int endHour, int endMin) {
         if (cHour < startHour) {
             Log.d("TAG", "CURRENT TIME: " + cHour + ":" + cMin + " START TIME: " + startHour + ":" + startMin + " END TIME: " + endHour + ":" + endMin);
@@ -81,11 +81,7 @@ public class RoomListFragment extends Fragment {
     }
 
 
-
-
-
-
-    // Function to get Building Name
+    // Function to get LIST ITEMS
     public void getBuildingName() {
         mDatabaseHelper = new DatabaseHelper(getActivity());
         try {
@@ -128,24 +124,22 @@ public class RoomListFragment extends Fragment {
             cMinute = Integer.parseInt(currentMin); //CURRENT MINUTE STORED HERE FOR COMPARISON
         }
         timeCursor.close();
-        String[] databaseTimeSplit2 = new String[2];
-        String[] databaseTimeSplit = new String[2];
+        String[] databaseTimeSplit2;
+        String[] databaseTimeSplit;
                 //Populate RecyclerView with relevant Information
+                //search through columns that have the correct building name
                 mCursor = mDatabaseHelper.QueryData("Select * from Final_Project_Courses_DB as FPC WHERE FPC.Building LIKE '"+ buildingClicked +"'");
                 if (mCursor != null) {
                     if (mCursor.moveToFirst()) {
                         do {
 
-
+                            //GET START AND END TIME
                             String startTime = mCursor.getString(mCursor.getColumnIndexOrThrow("Start_time"));
                             String endTime = mCursor.getString(mCursor.getColumnIndexOrThrow("End_time"));
 
-
+                            //GET ROOM NAME
                             String Building = mCursor.getString(mCursor.getColumnIndexOrThrow("Building"));
                             Integer RoomNumber = mCursor.getInt(mCursor.getColumnIndexOrThrow("Room Number"));
-
-
-
 
                             //add AM to morning time && add PM to afternoon time
                             databaseTimeSplit2 = endTime.split(" ");
@@ -162,13 +156,18 @@ public class RoomListFragment extends Fragment {
                             Log.d("TAG","START TIME: " + startHour + ":" + startMinute + "  " + "END TIME: " + endHour + ":" + endMinute);
 
                           // getBothTimes();
-                            if (chooseRoom(cHour,cMinute,startHour,startMinute,endHour,endMinute)) {
+                            //FILTER OUT ROOMS THAT HAVE CLASSES HAPPENING IN THEM RIGHT NOW
+                            if (chooseRoom(cHour, cMinute, startHour, startMinute, endHour, endMinute)) {
                                 Room room = new Room();
-                                room.setBuilding(Building + " " + Integer.toString(RoomNumber));
-                                Log.d("TAG", Building + RoomNumber);
-                                mRoomArrayList.add(room);
+//                                room.setBuilding(Building);
+//                                room.setRoomNum(RoomNumber);
+                                room.setBuilding("TESTB");
+                                room.setRoomNum(5000);
+                                if (!mRoomArrayList.contains(room)) {  //CHECK THAT ROOM ISN'T ALREADY ADDED  //TODO figure out how to compare rooms because it doesn't seem to be able to tell when rooms are the same
+                                    Log.d("TAG", Building + RoomNumber);
+                                    mRoomArrayList.add(room);
+                                }
                             }
-
                         }
                         while (mCursor.moveToNext());
                     }

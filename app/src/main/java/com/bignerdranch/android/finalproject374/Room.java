@@ -56,4 +56,11 @@ public class Room {
     public void setStatus(boolean status) {
         isEmpty = status;
     }
+
+    public boolean equals(Room other) {  //returns true if this room == other room
+        if ((this.getBuilding() == other.getBuilding()) && (this.getRoomNum() == other.getRoomNum())) {
+            return true;
+        }
+        return false;
+    }
 }

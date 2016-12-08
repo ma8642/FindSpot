@@ -52,11 +52,12 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomViewHolder>{
     public void onBindViewHolder(RoomViewHolder roomViewHolder, final int i) {
         //RoomInfo ri = roomInfoList.get(i);
         Room ri = mRooms.get(i);
-        roomViewHolder.vRoom.setText(ri.getBuilding());
+        roomViewHolder.vRoom.setText(ri.getBuilding() + " " + ri.getRoomNum());
         roomViewHolder.vProfessor.setText("Professor 1");
         roomViewHolder.vProfessor2.setText("Professor 2");
         roomViewHolder.vClassName.setText("Class Name");
-        roomViewHolder.vTime.setText("Free Until: " + ri.getRoomNum());
+        roomViewHolder.vTime.setText("Free Until:");
+        // roomViewHolder.vTime.setText("Free Until: " + ri.getRoomNum());
         roomViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v){
