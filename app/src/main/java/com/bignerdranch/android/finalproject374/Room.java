@@ -13,6 +13,7 @@ public class Room {
     private int mRoomNumber;  //Room number of room
     private boolean isEmpty;
 
+
     public Room() {
         //Generate unique identifier
         mId = UUID.randomUUID();

@@ -1,6 +1,7 @@
 package com.bignerdranch.android.finalproject374;
 
 
+import android.content.ClipData;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -20,7 +21,8 @@ public class DbBackend extends DbObject {
         super(context);
     }
 
-    //Write function to get
+
+
 
 
 

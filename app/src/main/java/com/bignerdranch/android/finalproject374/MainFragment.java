@@ -16,6 +16,8 @@ import android.widget.ImageView;
 import android.widget.Toast;
 import android.view.View.OnTouchListener;
 
+import static com.bignerdranch.android.finalproject374.RoomListFragment.bName;
+
 
 /**
  * Created by Alford on 11/8/16.

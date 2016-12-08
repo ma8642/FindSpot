@@ -2,10 +2,8 @@ package com.bignerdranch.android.finalproject374;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.view.Menu;
 import android.view.MenuItem;
 
 /**
@@ -24,8 +22,6 @@ public class RoomListActivity extends AppCompatActivity {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.add(R.id.listview_fragment_container, new RoomListFragment());
         ft.commit();
-
-
     }
 
     @Override

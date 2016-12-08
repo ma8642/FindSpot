@@ -1,27 +1,21 @@
 package com.bignerdranch.android.finalproject374;
 
-import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Editable;
-import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
-import android.widget.ArrayAdapter;
-import android.widget.EditText;
-import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+
+
 
 /**
  * Created by Wren on 11/7/2016.
@@ -29,47 +23,186 @@ import java.util.List;
 
 public class RoomListFragment extends Fragment {
 
-    public String [] ItemData;
-    public Adapter mAdapter;
+    private RecyclerView mRecyclerView;
+    private DatabaseHelper mDatabaseHelper;
+    private ArrayList<Room> mRoomArrayList = new ArrayList<Room>();
+    private Cursor mCursor;
+    private RoomAdapter mRoomAdapter;
+    public static String bName;
+    private String buildingClicked;
 
+    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup parent, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.roomlist_fragment, parent, false);
-        // 1. get a reference to recyclerView
-        RecyclerView roomList = (RecyclerView) rootView.findViewById(R.id.cardList);
-        // 2. set layoutManger
-        roomList.setLayoutManager(new LinearLayoutManager(getActivity()));
-        roomList.setHasFixedSize(true);
-        RoomAdapter ra = new RoomAdapter(createList(20));
-        roomList.setAdapter(ra);
-
+        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.cardList);
+        buildingClicked = "OLIN";
+        getBuildingName();
         return rootView;
     }
 
 
-
-
-//DUMMY FUNCTION TO POPULATE RECYCLER VIEW ROOM LIST
-    private List<RoomInfo> createList(int size) {
-
-        List<RoomInfo> result = new ArrayList<RoomInfo>();
-        for (int i=1; i <= size; i++) {
-            RoomInfo ri = new RoomInfo();
-            ri.room = RoomInfo.Room_PREFIX ;
-            ri.professor = RoomInfo.Professor_PREFIX ;
-            ri.professor2 = RoomInfo.Professor2_PREFIX ;
-            ri.className = RoomInfo.ClassName_PREFIX ;
-            ri.time = RoomInfo.TIME_PREFIX ;
-
-            result.add(ri);
-
-        }
-
-        return result;
+    public int getItemCount(){
+        return mRoomArrayList.size();
     }
 
 
+    public boolean chooseRoom(int cHour, int cMin, int startHour, int startMin, int endHour, int endMin){
+        if (cHour < startHour){
+            Log.d("TAG", cHour + " "+ cMin + " is earlier than " + startHour);
+            return true;
+        }else if (cHour == startHour && cMin < startMin){
+            Log.d("TAG", cHour + " "+ cMin + " is earlier than " + startHour + " " + startMin);
+            return true;
+        }else if (cHour > endHour){
+            Log.d("TAG", cHour + " "+ cMin + " is later than " + endHour);
+            return true;
+        }else if (cHour == endHour && cMin > endMin){
+            Log.d("TAG", cHour + " "+ cMin + " is later than " + endHour + " " + endMin);
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+
+
+    // Function to get Building Name
+    public void getBuildingName() {
+        mDatabaseHelper = new DatabaseHelper(getActivity());
+        try {
+            mDatabaseHelper.checkAndCoptDatabase();
+            mDatabaseHelper.openDatabase();
+        } catch (SQLiteException e) {
+            e.printStackTrace();
+        }
+        ///try {
+        //Get current hour and min
+        Integer currentHour = 0;
+        Integer currentMinute = 0;
+        String currentHr = "";
+        String currentMin = "";
+        String currentTime = "";
+        int cHour = 0;
+        int cMinute = 0;
+        String selectCurrentTimeQ = "SELECT STRFTIME('%H','NOW','LOCALTIME') AS HOUR, STRFTIME('%M','NOW','LOCALTIME') AS MINUTE ";
+        Cursor timeCursor = mDatabaseHelper.QueryData(selectCurrentTimeQ);
+        String[] currentTimeSplit = new String[2];
+
+        if (timeCursor.moveToFirst()) {
+            currentHour = Integer.parseInt(timeCursor.getString(0));
+            currentMinute = Integer.parseInt(timeCursor.getString(1));
+            currentTime = currentHour + ":" + currentMinute;
+            currentTimeSplit = currentTime.split(":");
+            currentHr = (currentTimeSplit[0]);
+            currentMin = (currentTimeSplit[1]);
+            cHour = Integer.parseInt(currentHr); //CURRENT HOUR STORED HERE FOR COMPARISON
+            cMinute = Integer.parseInt(currentMin); //CURRENT MINUTE STORED HERE FOR COMPARISON
+        }
+        timeCursor.close();
+
+        //Get Start Time of class
+        //Get time from database
+        String databaseTime = "";
+        Integer startHour = 0;
+        Integer startMinute = 0;
+        String databaseHr = "";
+        String databaseMin = "";
+        Cursor cursor1 = mDatabaseHelper.QueryData("Select * from Final_Project_Courses_DB");
+        ArrayList<String> databaseTimes = new ArrayList<String>();
+
+        if (cursor1.moveToFirst()) {
+
+            String[] databaseTimeSplit = new String[2];
+            if (cursor1.moveToFirst()) {
+                do {
+                    String time = cursor1.getString(cursor1.getColumnIndexOrThrow("Start_time"));
+                    //add AM to morning time && add PM to afternoon time
+                    databaseTimeSplit = time.split(" ");
+                    databaseHr = (databaseTimeSplit[0]);
+                    databaseMin = (databaseTimeSplit[1]);
+                    startHour = Integer.parseInt(databaseHr);
+                    startMinute = Integer.parseInt(databaseMin);
+
+
+                } while (cursor1.moveToNext());
+            }
+            cursor1.close();
+
+            //Get Start Time of class
+            //Get time from database
+            String dTime = "";
+            Integer endHour = 0;
+            Integer endMinute = 0;
+            String endHr = "";
+            String endMin = "";
+            Cursor endTimeCursor = mDatabaseHelper.QueryData("Select * from Final_Project_Courses_DB");
+
+            if (endTimeCursor.moveToFirst()) {
+
+                String[] databaseTimeSplit2 = new String[2];
+                if (endTimeCursor.moveToFirst()) {
+                    do {
+                        String time = endTimeCursor.getString(endTimeCursor.getColumnIndexOrThrow("End_time"));
+                        //add AM to morning time && add PM to afternoon time
+                        databaseTimeSplit2 = time.split(" ");
+                        endHr = (databaseTimeSplit2[0]);
+                        endMin = (databaseTimeSplit2[1]);
+                        endHour = Integer.parseInt(endHr);
+                        endMinute = Integer.parseInt(endMin);
+
+
+                    } while (endTimeCursor.moveToNext());
+                }
+                endTimeCursor.close();
+
+
+                //Populate RecyclerView with relevant Information
+                String startTime;
+                String endTime;
+                mCursor = mDatabaseHelper.QueryData("Select * from Final_Project_Courses_DB as FPC WHERE FPC.Building LIKE '" + buildingClicked + "'");
+                if (mCursor != null) {
+                    if (mCursor.moveToFirst()) {
+                        do {
+
+                            String Building = mCursor.getString(mCursor.getColumnIndexOrThrow("Building"));
+                            Integer RoomNumber = mCursor.getInt(mCursor.getColumnIndexOrThrow("Room Number"));
+
+
+                            if (chooseRoom(cHour,cMinute,startHour,startMinute,endHour,endMinute)) {
+                                //Integer FreeTime = mCursor.getInt(mCursor.getColumnIndexOrThrow(""));
+                                Room room = new Room();
+                                room.setBuilding(Building + " " + Integer.toString(RoomNumber));
+                                Log.d("TAG", Building + RoomNumber);
+                                //room.getFreeTime();
+                                mRoomArrayList.add(room);
+                            }
+
+                        }
+                        while (mCursor.moveToNext());
+                    }
+                }
+                //} catch (SQLiteException e) {
+                //  e.printStackTrace();
+            }
+            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+            mRoomAdapter = new RoomAdapter(getActivity(), mRoomArrayList);
+            mRoomAdapter.setOnTapListener(new OnTapListener() {
+                @Override
+                public void OnTapView(int position) {
+                    Toast.makeText(getContext(), "Click to " + position, Toast.LENGTH_SHORT).show();
+                }
+            });
+            {
+                mRecyclerView.setHasFixedSize(true);
+                mRecyclerView.setLayoutManager(linearLayoutManager);
+                mRecyclerView.setAdapter(mRoomAdapter);
+
+            }
+        }
+
+
+    }
 }
 
 
