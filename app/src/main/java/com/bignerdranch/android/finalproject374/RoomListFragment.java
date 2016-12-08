@@ -27,9 +27,16 @@ public class RoomListFragment extends Fragment {
     private DatabaseHelper mDatabaseHelper;
     private ArrayList<Room> mRoomArrayList = new ArrayList<Room>();
     private Cursor mCursor;
+    private Cursor nCursor;
     private RoomAdapter mRoomAdapter;
     public static String bName;
     private String buildingClicked;
+
+    Integer endHour = 0;
+    Integer endMinute = 0;
+
+    Integer startHour = 0;
+    Integer startMinute = 0;
 
     @Nullable
     @Override
@@ -42,28 +49,39 @@ public class RoomListFragment extends Fragment {
     }
 
 
-    public int getItemCount(){
+    public int getItemCount() {
         return mRoomArrayList.size();
     }
 
 
-    public boolean chooseRoom(int cHour, int cMin, int startHour, int startMin, int endHour, int endMin){
-        if (cHour < startHour){
-            Log.d("TAG", cHour + " "+ cMin + " is earlier than " + startHour);
+    public boolean chooseRoom(int cHour, int cMin, int startHour, int startMin, int endHour, int endMin) {
+        if (cHour < startHour) {
+            Log.d("TAG", "CURRENT TIME: " + cHour + ":" + cMin + " START TIME: " + startHour + ":" + startMin + " END TIME: " + endHour + ":" + endMin);
+
+            Log.d("TAG", cHour + " " + cMin + " is earlier than " + startHour);
             return true;
-        }else if (cHour == startHour && cMin < startMin){
-            Log.d("TAG", cHour + " "+ cMin + " is earlier than " + startHour + " " + startMin);
+        } else if (cHour == startHour && cMin < startMin) {
+            Log.d("TAG", "CURRENT TIME: " + cHour + ":" + cMin + " START TIME: " + startHour + ":" + startMin + " END TIME: " + endHour + ":" + endMin);
+
+            Log.d("TAG", cHour + " " + cMin + " is earlier than " + startHour + " " + startMin);
             return true;
-        }else if (cHour > endHour){
-            Log.d("TAG", cHour + " "+ cMin + " is later than " + endHour);
+        } else if (cHour > endHour) {
+            Log.d("TAG", "CURRENT TIME: " + cHour + ":" + cMin + " START TIME: " + startHour + ":" + startMin + " END TIME: " + endHour + ":" + endMin);
+
+            Log.d("TAG", cHour + " " + cMin + " is later than " + endHour);
             return true;
-        }else if (cHour == endHour && cMin > endMin){
-            Log.d("TAG", cHour + " "+ cMin + " is later than " + endHour + " " + endMin);
+        } else if (cHour == endHour && cMin > endMin) {
+            Log.d("TAG", "CURRENT TIME: " + cHour + ":" + cMin + " START TIME: " + startHour + ":" + startMin + " END TIME: " + endHour + ":" + endMin);
+
+            Log.d("TAG", cHour + " " + cMin + " is later than " + endHour + " " + endMin);
             return true;
-        }else{
+        } else {
             return false;
         }
     }
+
+
+
 
 
 
@@ -76,6 +94,16 @@ public class RoomListFragment extends Fragment {
         } catch (SQLiteException e) {
             e.printStackTrace();
         }
+
+        String dTime = "";
+        //Integer endHour = 0;
+        //Integer endMinute = 0;
+        String endHr = "";
+        String endMin = "";
+
+        String databaseHr = "";
+        String databaseMin = "";
+
         ///try {
         //Get current hour and min
         Integer currentHour = 0;
@@ -100,81 +128,44 @@ public class RoomListFragment extends Fragment {
             cMinute = Integer.parseInt(currentMin); //CURRENT MINUTE STORED HERE FOR COMPARISON
         }
         timeCursor.close();
-
-        //Get Start Time of class
-        //Get time from database
-        String databaseTime = "";
-        Integer startHour = 0;
-        Integer startMinute = 0;
-        String databaseHr = "";
-        String databaseMin = "";
-        Cursor cursor1 = mDatabaseHelper.QueryData("Select * from Final_Project_Courses_DB");
-        ArrayList<String> databaseTimes = new ArrayList<String>();
-
-        if (cursor1.moveToFirst()) {
-
-            String[] databaseTimeSplit = new String[2];
-            if (cursor1.moveToFirst()) {
-                do {
-                    String time = cursor1.getString(cursor1.getColumnIndexOrThrow("Start_time"));
-                    //add AM to morning time && add PM to afternoon time
-                    databaseTimeSplit = time.split(" ");
-                    databaseHr = (databaseTimeSplit[0]);
-                    databaseMin = (databaseTimeSplit[1]);
-                    startHour = Integer.parseInt(databaseHr);
-                    startMinute = Integer.parseInt(databaseMin);
-
-
-                } while (cursor1.moveToNext());
-            }
-            cursor1.close();
-
-            //Get Start Time of class
-            //Get time from database
-            String dTime = "";
-            Integer endHour = 0;
-            Integer endMinute = 0;
-            String endHr = "";
-            String endMin = "";
-            Cursor endTimeCursor = mDatabaseHelper.QueryData("Select * from Final_Project_Courses_DB");
-
-            if (endTimeCursor.moveToFirst()) {
-
-                String[] databaseTimeSplit2 = new String[2];
-                if (endTimeCursor.moveToFirst()) {
-                    do {
-                        String time = endTimeCursor.getString(endTimeCursor.getColumnIndexOrThrow("End_time"));
-                        //add AM to morning time && add PM to afternoon time
-                        databaseTimeSplit2 = time.split(" ");
-                        endHr = (databaseTimeSplit2[0]);
-                        endMin = (databaseTimeSplit2[1]);
-                        endHour = Integer.parseInt(endHr);
-                        endMinute = Integer.parseInt(endMin);
-
-
-                    } while (endTimeCursor.moveToNext());
-                }
-                endTimeCursor.close();
-
-
+        String[] databaseTimeSplit2 = new String[2];
+        String[] databaseTimeSplit = new String[2];
                 //Populate RecyclerView with relevant Information
-                String startTime;
-                String endTime;
-                mCursor = mDatabaseHelper.QueryData("Select * from Final_Project_Courses_DB as FPC WHERE FPC.Building LIKE '" + buildingClicked + "'");
+                mCursor = mDatabaseHelper.QueryData("Select * from Final_Project_Courses_DB as FPC WHERE FPC.Building LIKE '"+ buildingClicked +"'");
                 if (mCursor != null) {
                     if (mCursor.moveToFirst()) {
                         do {
+
+
+                            String startTime = mCursor.getString(mCursor.getColumnIndexOrThrow("Start_time"));
+                            String endTime = mCursor.getString(mCursor.getColumnIndexOrThrow("End_time"));
+
 
                             String Building = mCursor.getString(mCursor.getColumnIndexOrThrow("Building"));
                             Integer RoomNumber = mCursor.getInt(mCursor.getColumnIndexOrThrow("Room Number"));
 
 
+
+
+                            //add AM to morning time && add PM to afternoon time
+                            databaseTimeSplit2 = endTime.split(" ");
+                            endHr = (databaseTimeSplit2[0]);
+                            endMin = (databaseTimeSplit2[1]);
+                            endHour = Integer.parseInt(endHr);
+                            endMinute = Integer.parseInt(endMin);
+
+                            databaseTimeSplit = startTime.split(" ");
+                            databaseHr = (databaseTimeSplit[0]);
+                            databaseMin = (databaseTimeSplit[1]);
+                            startHour = Integer.parseInt(databaseHr);
+                            startMinute = Integer.parseInt(databaseMin);
+                            Log.d("TAG","START TIME: " + startHour + ":" + startMinute + "  " + "END TIME: " + endHour + ":" + endMinute);
+
+                          // getBothTimes();
                             if (chooseRoom(cHour,cMinute,startHour,startMinute,endHour,endMinute)) {
-                                //Integer FreeTime = mCursor.getInt(mCursor.getColumnIndexOrThrow(""));
                                 Room room = new Room();
                                 room.setBuilding(Building + " " + Integer.toString(RoomNumber));
                                 Log.d("TAG", Building + RoomNumber);
-                                //room.getFreeTime();
                                 mRoomArrayList.add(room);
                             }
 
@@ -182,9 +173,7 @@ public class RoomListFragment extends Fragment {
                         while (mCursor.moveToNext());
                     }
                 }
-                //} catch (SQLiteException e) {
-                //  e.printStackTrace();
-            }
+
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
             mRoomAdapter = new RoomAdapter(getActivity(), mRoomArrayList);
             mRoomAdapter.setOnTapListener(new OnTapListener() {
@@ -199,7 +188,7 @@ public class RoomListFragment extends Fragment {
                 mRecyclerView.setAdapter(mRoomAdapter);
 
             }
-        }
+
 
 
     }
