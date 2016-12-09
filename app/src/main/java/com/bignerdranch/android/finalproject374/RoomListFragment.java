@@ -27,6 +27,7 @@ public class RoomListFragment extends Fragment {
     private DatabaseHelper mDatabaseHelper;
     private ArrayList<String> mRoomArrayList = new ArrayList<String>(); //helps reference hashmap by storing each new roomname at a unique index
     private HashMap<String, Room> mRoomHashMap = new HashMap<>();
+    private HashMap<Room, ArrayList<String>> mRoomCourse = new HashMap<>();
     private Cursor mCursor;
     private Cursor nCursor;
     private RoomAdapter mRoomAdapter;
@@ -57,24 +58,24 @@ public class RoomListFragment extends Fragment {
     //RETURNS TRUE IF CURRENT TIME IS BEFORE OR AFTER A CLASS TIME
     public boolean chooseRoom(int cHour, int cMin, int startHour, int startMin, int endHour, int endMin) {
         if (cHour < startHour) {
-            Log.d("TAG", "CURRENT TIME: " + cHour + ":" + cMin + " START TIME: " + startHour + ":" + startMin + " END TIME: " + endHour + ":" + endMin);
+            //Log.d("TAG", "CURRENT TIME: " + cHour + ":" + cMin + " START TIME: " + startHour + ":" + startMin + " END TIME: " + endHour + ":" + endMin);
 
-            Log.d("TAG", cHour + " " + cMin + " is earlier than " + startHour);
+            //Log.d("TAG", cHour + " " + cMin + " is earlier than " + startHour);
             return true;
         } else if (cHour == startHour && cMin < startMin) {
-            Log.d("TAG", "CURRENT TIME: " + cHour + ":" + cMin + " START TIME: " + startHour + ":" + startMin + " END TIME: " + endHour + ":" + endMin);
+            //Log.d("TAG", "CURRENT TIME: " + cHour + ":" + cMin + " START TIME: " + startHour + ":" + startMin + " END TIME: " + endHour + ":" + endMin);
 
-            Log.d("TAG", cHour + " " + cMin + " is earlier than " + startHour + " " + startMin);
+            //Log.d("TAG", cHour + " " + cMin + " is earlier than " + startHour + " " + startMin);
             return true;
         } else if (cHour > endHour) {
-            Log.d("TAG", "CURRENT TIME: " + cHour + ":" + cMin + " START TIME: " + startHour + ":" + startMin + " END TIME: " + endHour + ":" + endMin);
+            //Log.d("TAG", "CURRENT TIME: " + cHour + ":" + cMin + " START TIME: " + startHour + ":" + startMin + " END TIME: " + endHour + ":" + endMin);
 
-            Log.d("TAG", cHour + " " + cMin + " is later than " + endHour);
+            //Log.d("TAG", cHour + " " + cMin + " is later than " + endHour);
             return true;
         } else if (cHour == endHour && cMin > endMin) {
-            Log.d("TAG", "CURRENT TIME: " + cHour + ":" + cMin + " START TIME: " + startHour + ":" + startMin + " END TIME: " + endHour + ":" + endMin);
+            //Log.d("TAG", "CURRENT TIME: " + cHour + ":" + cMin + " START TIME: " + startHour + ":" + startMin + " END TIME: " + endHour + ":" + endMin);
 
-            Log.d("TAG", cHour + " " + cMin + " is later than " + endHour + " " + endMin);
+            //Log.d("TAG", cHour + " " + cMin + " is later than " + endHour + " " + endMin);
             return true;
         } else {
             return false;
@@ -149,7 +150,7 @@ public class RoomListFragment extends Fragment {
                             databaseMin = (databaseTimeSplit[1]);
                             startHour = Integer.parseInt(databaseHr);
                             startMinute = Integer.parseInt(databaseMin);
-                            Log.d("TAG","START TIME: " + startHour + ":" + startMinute + "  " + "END TIME: " + endHour + ":" + endMinute);
+                            //Log.d("TAG","START TIME: " + startHour + ":" + startMinute + "  " + "END TIME: " + endHour + ":" + endMinute);
 
                             //FILTER OUT ROOMS THAT HAVE CLASSES HAPPENING IN THEM RIGHT NOW
                             if (chooseRoom(cHour, cMinute, startHour, startMinute, endHour, endMinute)) {
@@ -158,15 +159,38 @@ public class RoomListFragment extends Fragment {
                                 room.setBuilding(Building);
                                 room.setRoomNum(RoomNumber);
 
+                                String course = String.valueOf(startHour) + String.valueOf(startMinute) + String.valueOf(endHour) + String.valueOf(endMinute);
+
                                 String key = Building + RoomNumber;
                                 Room test = mRoomHashMap.get(key);
+
                                 if (test != null) { //if that key is not present in the Hashmap
-                                    Log.d("TAG", Building + RoomNumber + " already in list");
+                                    //Log.d("TAG", Building + RoomNumber + " already in list");
                                 }
                                 else {
-                                    Log.d("TAG", Building + RoomNumber + " not in list.  Add.");
+                                    //Log.d("TAG", Building + RoomNumber + " not in list.  Add.");
                                     mRoomArrayList.add(key);  //helps us reference hashmap
                                     mRoomHashMap.put(key, room);
+                                    mRoomCourse.put(room, course);
+
+//                                    Boolean addMe = true;
+//                                    if (mRoomCourse.get(room) != null) {  //TODO lol it's totally skipping this
+//                                        Log.d("TAG", "NOT NULL");
+//
+//                                        for (int i = 0; i < mRoomCourse.get(room).size(); i++) { //Look through courses in that room
+//                                            if (mRoomCourse.get(room).get(i) == course) {
+//                                                Log.d("TAG", mRoomCourse.get(room).get(i) + " equals " + course);
+//                                                addMe = false;
+//                                                break;
+//                                            }
+//                                        }
+//
+//                                        if (addMe == true) {
+//                                            mRoomCourse.get(room).add(course);
+//                                            Log.d("TAG", "ARRAY SIZE " + mRoomCourse.get(room).toString());
+//                                        }
+//                                    }
+//                                    Log.d("TAG", "NULL");
                                 }
                             }
                         }

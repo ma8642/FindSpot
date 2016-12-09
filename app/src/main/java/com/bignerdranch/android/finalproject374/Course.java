@@ -14,19 +14,21 @@ public class Course {
 
     private Room mRoom;  //which room the course is in
     private String mTitle;  //title of course
-    private Date[] mDates;  //list of dates when the class is in session (most will be the whole semester but some classes are only a few weeks long
+    private String[] mDates;  //list of dates when the class is in session (most will be the whole semester but some classes are only a few weeks long
+    private String[] mTimes;
     private List<String> mDays;  //days of the week when class is in session
-    private Date mStartTime;  //when class begins
-    private Date mEndTime;  //when class ends
+    private String mStartTime;  //when class begins
+    private String mEndTime;  //when class ends
 
     public Course() {
         //Generate unique identifier
-        this(UUID.randomUUID());
         mDays = new ArrayList<String>();
     }
 
-    public Course(UUID crn) {
-        mId = crn;
+    public Course(String startTime, String endTime) {
+        mTimes = new String[2];
+        mTimes[0] = startTime;
+        mTimes[1] = endTime;
         mDays = new ArrayList<String>();
     }
 
@@ -56,11 +58,11 @@ public class Course {
 
     //GETTER AND SETTER FOR mDATES
 
-    public Date[] getDates() {
+    public String[] getDates() {
         return mDates;
     }
 
-    public void setDates(Date startDate, Date endDate) {
+    public void setDates(String startDate, String endDate) {
         mDates[0] = startDate;
         mDates[1] = endDate;
     }
