@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -20,18 +21,15 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomViewHolder>{
 
 
     private Activity mActivity;
-    List<Room> mRooms = Collections.emptyList();
-    public List<RoomInfo> roomInfoList;
+    List<String> mIndices = Collections.emptyList();  //List that is the same size as hashmap so that we can reference a hashmap key using array index
+    HashMap<String, Room> mRooms;
     private OnTapListener OnTapListener;
 
-    public RoomAdapter(Activity activity, List<Room> mRooms){
+    public RoomAdapter(Activity activity, HashMap<String, Room> mRooms, List<String> mIndices){
         this.mActivity = activity;
+        this.mIndices = mIndices;
         this.mRooms = mRooms;
     }
-
-    //public RoomAdapter(List<RoomInfo> roomInfoList) {
-      //  this.roomInfoList = roomInfoList;
-    //}
 
     @Override
     public int getItemCount() {
@@ -51,13 +49,14 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomViewHolder>{
     @Override
     public void onBindViewHolder(RoomViewHolder roomViewHolder, final int i) {
         //RoomInfo ri = roomInfoList.get(i);
-        Room ri = mRooms.get(i);
+        String key = mIndices.get(i);
+        Room ri = mRooms.get(key);
         roomViewHolder.vRoom.setText(ri.getBuilding() + " " + ri.getRoomNum());
         roomViewHolder.vProfessor.setText("Professor 1");
         roomViewHolder.vProfessor2.setText("Professor 2");
         roomViewHolder.vClassName.setText("Class Name");
         roomViewHolder.vTime.setText("Free Until:");
-        // roomViewHolder.vTime.setText("Free Until: " + ri.getRoomNum());
+
         roomViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v){

@@ -15,19 +15,20 @@ public class Room {
 
 
     public Room() {
-        //Generate unique identifier
-        mId = UUID.randomUUID();
     }
 
     public Room(String building, int num ) {
-        mId = UUID.randomUUID();
         mBuilding = building;
         mRoomNumber = num;
     }
 
-    //GETTER FOR mID
+    //GETTER AND SETTER FOR mID
     public UUID getId() {
         return mId;
+    }
+
+    public void setId() {
+        mId = UUID.randomUUID();
     }
 
     //GETTER AND SETTER FOR mBuilding

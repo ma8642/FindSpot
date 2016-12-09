@@ -14,7 +14,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-
+import java.util.HashMap;
 
 
 /**
@@ -25,7 +25,8 @@ public class RoomListFragment extends Fragment {
 
     private RecyclerView mRecyclerView;
     private DatabaseHelper mDatabaseHelper;
-    private ArrayList<Room> mRoomArrayList = new ArrayList<Room>();
+    private ArrayList<String> mRoomArrayList = new ArrayList<String>(); //helps reference hashmap by storing each new roomname at a unique index
+    private HashMap<String, Room> mRoomHashMap = new HashMap<>();
     private Cursor mCursor;
     private Cursor nCursor;
     private RoomAdapter mRoomAdapter;
@@ -50,7 +51,7 @@ public class RoomListFragment extends Fragment {
 
 
     public int getItemCount() {
-        return mRoomArrayList.size();
+        return mRoomHashMap.size();
     }  //ARRAYLIST TO POPULATE RECYCLERVIEW
 
     //RETURNS TRUE IF CURRENT TIME IS BEFORE OR AFTER A CLASS TIME
@@ -91,17 +92,12 @@ public class RoomListFragment extends Fragment {
             e.printStackTrace();
         }
 
-        String dTime = "";
-        //Integer endHour = 0;
-        //Integer endMinute = 0;
         String endHr = "";
         String endMin = "";
 
         String databaseHr = "";
         String databaseMin = "";
 
-        ///try {
-        //Get current hour and min
         Integer currentHour = 0;
         Integer currentMinute = 0;
         String currentHr = "";
@@ -155,17 +151,22 @@ public class RoomListFragment extends Fragment {
                             startMinute = Integer.parseInt(databaseMin);
                             Log.d("TAG","START TIME: " + startHour + ":" + startMinute + "  " + "END TIME: " + endHour + ":" + endMinute);
 
-                          // getBothTimes();
                             //FILTER OUT ROOMS THAT HAVE CLASSES HAPPENING IN THEM RIGHT NOW
                             if (chooseRoom(cHour, cMinute, startHour, startMinute, endHour, endMinute)) {
                                 Room room = new Room();
-//                                room.setBuilding(Building);
-//                                room.setRoomNum(RoomNumber);
-                                room.setBuilding("TESTB");
-                                room.setRoomNum(5000);
-                                if (!mRoomArrayList.contains(room)) {  //CHECK THAT ROOM ISN'T ALREADY ADDED  //TODO figure out how to compare rooms because it doesn't seem to be able to tell when rooms are the same
-                                    Log.d("TAG", Building + RoomNumber);
-                                    mRoomArrayList.add(room);
+                                //Room room2 = new Room();
+                                room.setBuilding(Building);
+                                room.setRoomNum(RoomNumber);
+
+                                String key = Building + RoomNumber;
+                                Room test = mRoomHashMap.get(key);
+                                if (test != null) { //if that key is not present in the Hashmap
+                                    Log.d("TAG", Building + RoomNumber + " already in list");
+                                }
+                                else {
+                                    Log.d("TAG", Building + RoomNumber + " not in list.  Add.");
+                                    mRoomArrayList.add(key);  //helps us reference hashmap
+                                    mRoomHashMap.put(key, room);
                                 }
                             }
                         }
@@ -174,7 +175,7 @@ public class RoomListFragment extends Fragment {
                 }
 
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
-            mRoomAdapter = new RoomAdapter(getActivity(), mRoomArrayList);
+            mRoomAdapter = new RoomAdapter(getActivity(), mRoomHashMap, mRoomArrayList); //TODO
             mRoomAdapter.setOnTapListener(new OnTapListener() {
                 @Override
                 public void OnTapView(int position) {
