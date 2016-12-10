@@ -14,19 +14,18 @@ public class Course {
 
     private Room mRoom;  //which room the course is in
     private String mTitle;  //title of course
-    private Date[] mDates;  //list of dates when the class is in session (most will be the whole semester but some classes are only a few weeks long
+    //private String[] mDates;  //list of dates when the class is in session (most will be the whole semester but some classes are only a few weeks long
     private List<String> mDays;  //days of the week when class is in session
-    private Date mStartTime;  //when class begins
-    private Date mEndTime;  //when class ends
+    private String mStartTime;  //when class begins
+    private String mEndTime;  //when class ends
 
     public Course() {
         //Generate unique identifier
-        this(UUID.randomUUID());
         mDays = new ArrayList<String>();
+        mTitle = "";
     }
 
-    public Course(UUID crn) {
-        mId = crn;
+    public Course(String startTime, String endTime) {
         mDays = new ArrayList<String>();
     }
 
@@ -53,16 +52,16 @@ public class Course {
         this.mRoom = mRoom;
     }
 
+    //GETTER AND SETTER FOR START AND END TIMES
+    public void setClassTimes(String start, String end) {
+        mStartTime = start;
+        mEndTime = end;
 
-    //GETTER AND SETTER FOR mDATES
-
-    public Date[] getDates() {
-        return mDates;
     }
 
-    public void setDates(Date startDate, Date endDate) {
-        mDates[0] = startDate;
-        mDates[1] = endDate;
+    public String[] getClassTimes() {
+        String returnMe = mStartTime + "-" + mEndTime;
+        return returnMe.split("-");
     }
 
     //GETTER AND SETTER FOR DAYS of WEEK
@@ -74,6 +73,18 @@ public class Course {
     public void addDay(String day) {
         mDays.add(day);
     }
+
+
+//    //GETTER AND SETTER FOR mDATES
+//
+//    public String[] getDates() {
+//        return mDates;
+//    }
+//
+//    public void setDates(String startDate, String endDate) {
+//        mDates[0] = startDate;
+//        mDates[1] = endDate;
+//    }
 
 
 }
