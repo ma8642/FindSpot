@@ -14,32 +14,20 @@
         <TextView
             android:id="@+id/roomNameNumber"
             android:layout_width="match_parent"
-            android:layout_height="20dp"
+            android:layout_height="wrap_content"
             android:background="@color/cardview_dark_background"
-            android:text="Room"
+            android:textSize="25sp"
             android:gravity="center_vertical"
             android:textColor="@android:color/white"
-            android:textSize="14sp"/>
+            />
 
         <TextView
-            android:id="@+id/txtProfessor"
+            android:id="@+id/txtTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Professor"
             android:gravity="center_vertical"
-            android:textSize="10sp"
+            android:textSize="22sp"
             android:layout_below="@id/roomNameNumber"
-            android:layout_marginTop="10dp"
-            android:layout_marginLeft="5dp"/>
-
-        <TextView
-            android:id="@+id/txtProfessor2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Professor2"
-            android:gravity="center_vertical"
-            android:textSize="10sp"
-            android:layout_below="@id/txtProfessor"
             android:layout_marginTop="10dp"
             android:layout_marginLeft="5dp"/>
 
@@ -47,23 +35,34 @@
             android:id="@+id/txtClassName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:textSize="22sp"
+            android:layout_below="@id/txtTime"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="5dp"/>
+
+<!--
+        <TextView
+            android:id="@+id/txtClassName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
             android:text="ClassName"
             android:textSize="10sp"
-            android:layout_above="@+id/txtProfessor2"
-            android:layout_toRightOf="@+id/txtProfessor2"
-            android:layout_toEndOf="@+id/txtProfessor2"
-            android:layout_marginLeft="118dp"
-            android:layout_marginStart="118dp"/>
+            android:layout_toRightOf="@+id/txtTime"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"/>
 
         <TextView
             android:id="@+id/txtTime"
             android:text="Time"
             android:textSize="10sp"
             android:layout_marginTop="10dp"
-            android:layout_alignLeft="@+id/txtClassName"
-            android:layout_below="@+id/txtClassName"
+            android:layout_below="@+id/roomNameNumber"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
+-->
 
     </RelativeLayout>
 

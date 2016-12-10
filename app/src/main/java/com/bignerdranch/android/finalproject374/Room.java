@@ -14,6 +14,7 @@ public class Room {
     private int mRoomNumber;  //Room number of room
     private ArrayList<Course> mCourses;
     private boolean isEmpty;
+    private int freeTime;
 
 
     public Room() {
@@ -52,6 +53,11 @@ public class Room {
     public void setRoomNum(int num) {
         mRoomNumber = num;
     }
+
+    //GETTER AND SETTER FOR FREE TIME
+    public int getFreeTime() { return freeTime;}
+
+    public void setFreeTime(int freeTime) {this.freeTime = freeTime; }
 
     //GETTER AND SETTER FOR whether or not room is empty
     public boolean getStatus() {

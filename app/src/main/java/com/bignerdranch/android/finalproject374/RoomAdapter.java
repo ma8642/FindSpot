@@ -17,6 +17,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.StringTokenizer;
 
 /**
  * Created by Wren on 12/4/2016.
@@ -30,7 +31,7 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomViewHolder>{
     HashMap<String, Room> mRooms;
     HashMap<String, String> mWeekAcronym;
     private OnTapListener OnTapListener;
-
+    //int freeTime;
     public RoomAdapter(Activity activity, HashMap<String, Room> mRooms, List<String> mIndices){
         this.mActivity = activity;
         this.mIndices = mIndices;
@@ -77,8 +78,8 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomViewHolder>{
             nextTime = "Free until " + startTime[0] + ":" + startTime[1];
         }
         roomViewHolder.vRoom.setText(ri.getBuilding() + " " + ri.getRoomNum());
-        roomViewHolder.vProfessor.setText("Professor 1");
-        roomViewHolder.vProfessor2.setText("Professor 2");
+        //roomViewHolder.vProfessor.setText("Professor 1");
+        //roomViewHolder.vProfessor2.setText("Professor 2");
         roomViewHolder.vClassName.setText("Next class is " + next);
         roomViewHolder.vTime.setText(nextTime);
 
@@ -98,16 +99,16 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomViewHolder>{
         int cHr = Integer.parseInt(today[1]);
         int cMin = Integer.parseInt(today[2]);
 
-        //Log.d("TAG", "SEARCHING " + r.getBuilding() + r.getRoomNum());
+        Log.d("TAG", "SEARCHING " + r.getBuilding() + r.getRoomNum());
         for (int i = 0; i < r.getCourses().size(); i++) { //loop through courses that occur in room
             Course c = r.getCourses().get(i);
             Log.d("TAG", c.getTitle());
             if (isAfter(c, cDay, cHr, cMin) == true) {  //if course occurs later today
-                //Log.d("TAG", "Course occurs at " + c.getClassTimes()[0]);
+                Log.d("TAG", "Course occurs at " + c.getClassTimes()[0]);
                 return c;
             }
             else {
-                //Log.d("TAG", "Course does not occur later today");
+                Log.d("TAG", "Course does not occur later today");
             }
         }
 
@@ -134,14 +135,20 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomViewHolder>{
         int startMin = Integer.parseInt(startSplit[1]);  // "mm"
         String curr = cHour + " " + cMin;
 
-        //Log.d("DEBUG D CURR D CLASS", cDay + " " + curr + " " + c.getDays().get(0) + " " + start);
+
+        Log.d("DEBUG D CURR D CLASS", cDay + " " + curr + " " + c.getDays().get(0) + " " + start);
 
         for (int i = 0; i < days.size(); i++) {
-            if (cDay == c.getDays().get(i)) {//if cDay == the day of the course
+            //Log.d("DEBUG", c.getDays().get(i));
+            //Log.d("DEBUG", cDay);
+            //Log.d("DEBUG", String.valueOf(cDay == c.getDays().get(i)));
+            if (cDay.equalsIgnoreCase(c.getDays().get(i))) {//if cDay == the day of the course
                 if (cHour < startHr) {  //is the class starts later hour than current time
+                    //freeTime = startHr - cHour;
+                    //Log.d("DEBUG", "Free Time: " + freeTime);
+                    Log.d("DEBUG", cHour + " is before " + startHr);
                     return true;
-                }
-                else if (cMin < startMin){  //if class starts the same hour but later minute than current time
+                } else if (cMin < startMin) {  //if class starts the same hour but later minute than current time
                     return true;
                 }
             }

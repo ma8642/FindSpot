@@ -241,7 +241,7 @@ public class RoomListFragment extends Fragment {
                         while (mCursor.moveToNext());
                     }
                 }
-
+/*
             //Fake Room, fake course
             Room test = new Room();
             test.setBuilding("RKC");
@@ -249,12 +249,12 @@ public class RoomListFragment extends Fragment {
             String key = "RKC5000";
             mRoomArrayList.add(key);  //helps us reference hashmap
             mRoomHashMap.put(key, test);
-            Course c = new Course();
+           Course c = new Course();
             c.setTitle("Petty 101");
             c.setClassTimes("15 00", "19 45");
             c.addDay("S");
             mRoomHashMap.get(key).addCourse(c);  //add course to room's mCourses list
-
+*/
 
 
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());

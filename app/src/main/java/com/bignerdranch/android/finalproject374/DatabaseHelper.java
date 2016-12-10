@@ -28,7 +28,7 @@ import java.io.OutputStream;
 public class DatabaseHelper extends SQLiteAssetHelper {
 
     private static DatabaseHelper mInstance = null;
-    private static String DB_NAME = "CourseDB3.sqlite";
+    private static String DB_NAME = "CourseDB4.sqlite";
     private static String DB_PATH = "";
     private static int DATABASE_VERSION = 1;
     private SQLiteDatabase myDatabase;
