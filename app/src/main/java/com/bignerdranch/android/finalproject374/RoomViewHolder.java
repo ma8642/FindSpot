@@ -20,7 +20,7 @@ public class RoomViewHolder extends RecyclerView.ViewHolder {
         vRoom = (TextView) v.findViewById(R.id.roomNameNumber);
         vProfessor =  (TextView) v.findViewById(R.id.txtProfessor);
         vProfessor2 = (TextView)  v.findViewById(R.id.txtProfessor2);
-        vClassName = (TextView)  v.findViewById(R.id.txtClassName);
-        vTime = (TextView) v.findViewById(R.id.txtTime);
+        vClassName = (TextView)  v.findViewById(R.id.txtClassName);  //displays next class that is about to start
+        vTime = (TextView) v.findViewById(R.id.txtTime);  //displays when the room is free-until
     }
 }

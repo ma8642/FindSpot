@@ -28,7 +28,7 @@ public class RoomListFragment extends Fragment {
     private DatabaseHelper mDatabaseHelper;
     private ArrayList<String> mRoomArrayList = new ArrayList<String>(); //helps reference hashmap by storing each new roomname at a unique index
     private HashMap<String, Room> mRoomHashMap = new HashMap<>();
-    private HashMap<Room, ArrayList<String>> mRoomCourse = new HashMap<>();
+    //private HashMap<Room, ArrayList<String>> mRoomCourse = new HashMap<>();
     private Cursor mCursor;
     private Cursor nCursor;
     private RoomAdapter mRoomAdapter;
@@ -88,6 +88,30 @@ public class RoomListFragment extends Fragment {
         }
     }
 
+    public String intToWeekDay(int val) {  //converts integer value to a string of that weekday
+        String weekday = "";
+        if (val == 1) {
+            weekday = "M";
+        }
+        else if (val == 2) {
+            weekday = "T";
+        }
+        else if (val == 3) {
+            weekday = "W";
+        }
+        else if (val == 4) {
+            weekday = "Th";
+        }
+        else if (val == 5) {
+            weekday = "F";
+        }
+        else {
+            weekday = "S";  //satuday or sunday for debug
+        }
+
+        return weekday;
+    }
+
 
     // Function to get LIST ITEMS
     public void getBuildingName() {
@@ -132,8 +156,9 @@ public class RoomListFragment extends Fragment {
             currentMin = (currentTimeSplit[1]);
             cHour = Integer.parseInt(currentHr); //CURRENT HOUR STORED HERE FOR COMPARISON
             cMinute = Integer.parseInt(currentMin); //CURRENT MINUTE STORED HERE FOR COMPARISON
-            Log.d("WEEKDAY", String.valueOf(currentDay));
-            //cDay = currentDay.substring(0, 1);  //CURRENT DAY A
+            //Log.d("WEEKDAY", String.valueOf(currentDay));
+            //Log.d("WEEKDAY", intToWeekDay(currentDay));
+            cDay = intToWeekDay(currentDay);  //CURRENT DAY OF WEEK (e.g. "M" or Th") STORED HERE FOR COMPARISON
         }
         timeCursor.close();
         String[] databaseTimeSplit2;
@@ -145,6 +170,8 @@ public class RoomListFragment extends Fragment {
                 if (mCursor != null) {
                     if (mCursor.moveToFirst()) {
                         do {
+                            //GET TITLE
+                            String courseName = mCursor.getString(mCursor.getColumnIndexOrThrow("Course Name"));
 
                             //GET DATES AND START AND END TIME
                             String dates = mCursor.getString(mCursor.getColumnIndexOrThrow("Dates"));
@@ -174,71 +201,61 @@ public class RoomListFragment extends Fragment {
                             //FILTER OUT ROOMS THAT HAVE CLASSES HAPPENING IN THEM RIGHT NOW
                             if (chooseRoom(cDay, cHour, cMinute, courseDays, startHour, startMinute, endHour, endMinute)) {
                                 Room room = new Room();
-                                //Room room2 = new Room();
                                 room.setBuilding(Building);
                                 room.setRoomNum(RoomNumber);
 
-                                String course = String.valueOf(startHour) + String.valueOf(startMinute) + String.valueOf(endHour) + String.valueOf(endMinute);
+                                String weekdays = "";
+
+                                for (int i = 0; i < courseDays.length; i++) {
+                                    weekdays += courseDays[i];
+                                }
+
+                                //CREATE STRING WITH ALL INFO ABOUT
+                                String course = weekdays + String.valueOf(startHour) + String.valueOf(startMinute) + String.valueOf(endHour) + String.valueOf(endMinute);
 
                                 String key = Building + RoomNumber;
                                 Room test = mRoomHashMap.get(key);
 
                                 if (test != null) { //if that key is already present in the Hashmap
                                     //Log.d("TAG", Building + RoomNumber + " already in list");
-                                    //since room is already in mRoomHashMap, check if class time is already in mRoomCourse.get(room)
-                                    Boolean addMe = true;
-                                    if (mRoomCourse.get(room) != null) {  //TODO lol it's totally skipping this
-                                        Log.d("TAG", "NOT NULL");
-
-                                        for (int i = 0; i < mRoomCourse.get(room).size(); i++) { //Look through courses in that room
-                                            if (mRoomCourse.get(room).get(i) == course) {
-                                                Log.d("TAG", mRoomCourse.get(room).get(i) + " equals " + course);
-                                                addMe = false;
-                                                break;
-                                            }
-                                        }
-
-                                        if (addMe == true) {
-                                            mRoomCourse.get(room).add(course);
-                                            Log.d("TAG", "ARRAY SIZE " + mRoomCourse.get(room).toString());
-                                        }
-                                    }
-                                    Log.d("TAG", "NULL");
-
                                 }
                                 else {
                                     //Log.d("TAG", Building + RoomNumber + " not in list.  Add.");
-                                    ArrayList<String> classPeriod = new ArrayList<>();
-                                    Log.d("PERIOD", course);
-                                    classPeriod.add(course);
                                     mRoomArrayList.add(key);  //helps us reference hashmap
                                     mRoomHashMap.put(key, room);
-                                    mRoomCourse.put(room, classPeriod);
-
-//                                    Boolean addMe = true;
-//                                    if (mRoomCourse.get(room) != null) {  //TODO lol it's totally skipping this
-//                                        Log.d("TAG", "NOT NULL");
-//
-//                                        for (int i = 0; i < mRoomCourse.get(room).size(); i++) { //Look through courses in that room
-//                                            if (mRoomCourse.get(room).get(i) == course) {
-//                                                Log.d("TAG", mRoomCourse.get(room).get(i) + " equals " + course);
-//                                                addMe = false;
-//                                                break;
-//                                            }
-//                                        }
-//
-//                                        if (addMe == true) {
-//                                            mRoomCourse.get(room).add(course);
-//                                            Log.d("TAG", "ARRAY SIZE " + mRoomCourse.get(room).toString());
-//                                        }
-//                                    }
-//                                    Log.d("TAG", "NULL");
                                 }
+
+                                //create course object from course info
+                                Course c = new Course();
+                                c.setTitle(courseName);
+                                c.setClassTimes(startTime, endTime);
+
+                                for (int i = 0; i < courseDays.length; i++) {  //add all the weekdays that the course occurs
+                                    c.addDay(courseDays[i]);
+                                }
+
+                                mRoomHashMap.get(key).addCourse(c);  //add course to room's mCourses list
                             }
                         }
+
                         while (mCursor.moveToNext());
                     }
                 }
+
+            //Fake Room, fake course
+            Room test = new Room();
+            test.setBuilding("RKC");
+            test.setRoomNum(5000);
+            String key = "RKC5000";
+            mRoomArrayList.add(key);  //helps us reference hashmap
+            mRoomHashMap.put(key, test);
+            Course c = new Course();
+            c.setTitle("Petty 101");
+            c.setClassTimes("15 00", "19 45");
+            c.addDay("S");
+            mRoomHashMap.get(key).addCourse(c);  //add course to room's mCourses list
+
+
 
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
             mRoomAdapter = new RoomAdapter(getActivity(), mRoomHashMap, mRoomArrayList); //TODO

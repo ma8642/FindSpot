@@ -73,7 +73,7 @@ public class MainFragment extends Fragment implements OnTouchListener {
 
     @Override
     public boolean onTouch(View v, MotionEvent ev) {
-        Log.d(TAG, "Touched Screen!");
+        //Log.d(TAG, "Touched Screen!");
 
         boolean returnMe = false;
         final int action = ev.getAction();
