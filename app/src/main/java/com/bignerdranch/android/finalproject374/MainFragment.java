@@ -44,10 +44,6 @@ public class MainFragment extends Fragment implements OnTouchListener {
         this.buildingClicked = building;
     }
 
-    public String getBuildingClicked() {
-        return buildingClicked;
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -56,7 +52,7 @@ public class MainFragment extends Fragment implements OnTouchListener {
         ImageView image = (ImageView) v.findViewById(R.id.campus_map);
 
         image.setOnTouchListener(this);
-        setBuildingClicked("None");  //user has not clicked a building yet
+        //setBuildingClicked("None");  //user has not clicked a building yet
 
         if (toastShown == false) {
             toast("Select a building");
@@ -64,7 +60,7 @@ public class MainFragment extends Fragment implements OnTouchListener {
         }
 
         if (savedInstanceState != null) {
-            buildingClicked = savedInstanceState.getString(KEY_INDEX);
+            //buildingClicked = savedInstanceState.getString(KEY_INDEX);
             toastShown = savedInstanceState.getBoolean(KEY_SHOWN);
         }
 
@@ -73,17 +69,13 @@ public class MainFragment extends Fragment implements OnTouchListener {
 
     @Override
     public boolean onTouch(View v, MotionEvent ev) {
-        //Log.d(TAG, "Touched Screen!");
 
-        boolean returnMe = false;
+        boolean returnMe;
         final int action = ev.getAction();
 
         //Here we get the coordinates of the user's touch point
         final int evX = (int) ev.getX();
         final int evY = (int) ev.getY();
-
-        String olinToast = "OPEN OLIN FRAGMENT";
-        String rkcToast = "OPEN RKC FRAGMENT";
 
         // If we cannot find the imageView, return.
         ImageView imageView = (ImageView) v.findViewById (R.id.campus_map);
@@ -103,7 +95,6 @@ public class MainFragment extends Fragment implements OnTouchListener {
                 {
                     // open RKC Fragment
                     setBuildingClicked("RKC");
-                    toast(rkcToast);
                     Intent i = new Intent(getActivity(), RoomListActivity.class);
                     i.putExtra("extra", buildingClicked);
                     startActivity(i);
@@ -114,11 +105,8 @@ public class MainFragment extends Fragment implements OnTouchListener {
                 {
                     //open Olin Fragment
                     setBuildingClicked("OLIN");
-                    toast(olinToast);
-
                     Intent i = new Intent(getActivity(), RoomListActivity.class);
                     i.putExtra("extra", buildingClicked);
-                    //roomName = "Olin";
                     startActivity(i);
                 }
 

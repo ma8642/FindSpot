@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * Created by Marley on 12/5/16.
+ * Created by Alford on 12/5/16.
  */
 
 public class Course {
@@ -73,18 +73,6 @@ public class Course {
     public void addDay(String day) {
         mDays.add(day);
     }
-
-
-//    //GETTER AND SETTER FOR mDATES
-//
-//    public String[] getDates() {
-//        return mDates;
-//    }
-//
-//    public void setDates(String startDate, String endDate) {
-//        mDates[0] = startDate;
-//        mDates[1] = endDate;
-//    }
 
 
 }

@@ -10,16 +10,12 @@ import android.widget.TextView;
 
 public class RoomViewHolder extends RecyclerView.ViewHolder {
     public TextView vRoom;
-    //public TextView vProfessor;
-    //public TextView vProfessor2;
     public TextView vClassName;
     public TextView vTime;
 
     public RoomViewHolder(View v) {
         super(v);
         vRoom = (TextView) v.findViewById(R.id.roomNameNumber);
-        //vProfessor =  (TextView) v.findViewById(R.id.txtProfessor);
-        //vProfessor2 = (TextView)  v.findViewById(R.id.txtProfessor2);
         vClassName = (TextView)  v.findViewById(R.id.txtClassName);  //displays next class that is about to start
         vTime = (TextView) v.findViewById(R.id.txtTime);  //displays when the room is free-until
     }

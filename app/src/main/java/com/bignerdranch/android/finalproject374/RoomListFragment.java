@@ -28,11 +28,8 @@ public class RoomListFragment extends Fragment {
     private DatabaseHelper mDatabaseHelper;
     private ArrayList<String> mRoomArrayList = new ArrayList<String>(); //helps reference hashmap by storing each new roomname at a unique index
     private HashMap<String, Room> mRoomHashMap = new HashMap<>();
-    //private HashMap<Room, ArrayList<String>> mRoomCourse = new HashMap<>();
     private Cursor mCursor;
-    private Cursor nCursor;
     private RoomAdapter mRoomAdapter;
-    //public static String bName;
     private String buildingClicked;
 
     Integer endHour = 0;
@@ -52,9 +49,9 @@ public class RoomListFragment extends Fragment {
     }
 
 
-    public int getItemCount() {
+    public int getItemCount() {  //ARRAYLIST TO POPULATE RECYCLERVIEW
         return mRoomHashMap.size();
-    }  //ARRAYLIST TO POPULATE RECYCLERVIEW
+    }
 
     //RETURNS TRUE IF CURRENT TIME IS BEFORE OR AFTER A CLASS TIME
     public boolean chooseRoom(String cDay, int cHour, int cMin, String[] days, int startHour, int startMin, int endHour, int endMin) {
@@ -63,26 +60,23 @@ public class RoomListFragment extends Fragment {
         }
         else { //if it's the same day, we can still compare times to see if it's currently empty
             if (cHour < startHour) {
-                //Log.d("TAG", "CURRENT TIME: " + cHour + ":" + cMin + " START TIME: " + startHour + ":" + startMin + " END TIME: " + endHour + ":" + endMin);
 
-                //Log.d("TAG", cHour + " " + cMin + " is earlier than " + startHour);
                 return true;
+
             } else if (cHour == startHour && cMin < startMin) {
-                //Log.d("TAG", "CURRENT TIME: " + cHour + ":" + cMin + " START TIME: " + startHour + ":" + startMin + " END TIME: " + endHour + ":" + endMin);
 
-                //Log.d("TAG", cHour + " " + cMin + " is earlier than " + startHour + " " + startMin);
                 return true;
+
             } else if (cHour > endHour) {
-                //Log.d("TAG", "CURRENT TIME: " + cHour + ":" + cMin + " START TIME: " + startHour + ":" + startMin + " END TIME: " + endHour + ":" + endMin);
 
-                //Log.d("TAG", cHour + " " + cMin + " is later than " + endHour);
                 return true;
+
             } else if (cHour == endHour && cMin > endMin) {
-                //Log.d("TAG", "CURRENT TIME: " + cHour + ":" + cMin + " START TIME: " + startHour + ":" + startMin + " END TIME: " + endHour + ":" + endMin);
 
-                //Log.d("TAG", cHour + " " + cMin + " is later than " + endHour + " " + endMin);
                 return true;
+
             } else {
+
                 return false;
             }
         }
@@ -123,22 +117,18 @@ public class RoomListFragment extends Fragment {
             e.printStackTrace();
         }
 
-        //new GregorianCalendar().get(Calendar.DAY_OF_WEEK);
+        String endHr;
+        String endMin;
 
-        String weekDay = "";
+        String databaseHr;
+        String databaseMin;
 
-        String endHr = "";
-        String endMin = "";
-
-        String databaseHr = "";
-        String databaseMin = "";
-
-        Integer currentHour = 0;
-        Integer currentMinute = 0;
-        String currentHr = "";
-        String currentMin = "";
-        String currentTime = "";
-        int currentDay = 0;
+        Integer currentHour;
+        Integer currentMinute;
+        String currentHr;
+        String currentMin;
+        String currentTime;
+        int currentDay;
         int cHour = 0;
         int cMinute = 0;
         String cDay = "";
@@ -156,8 +146,6 @@ public class RoomListFragment extends Fragment {
             currentMin = (currentTimeSplit[1]);
             cHour = Integer.parseInt(currentHr); //CURRENT HOUR STORED HERE FOR COMPARISON
             cMinute = Integer.parseInt(currentMin); //CURRENT MINUTE STORED HERE FOR COMPARISON
-            //Log.d("WEEKDAY", String.valueOf(currentDay));
-            //Log.d("WEEKDAY", intToWeekDay(currentDay));
             cDay = intToWeekDay(currentDay);  //CURRENT DAY OF WEEK (e.g. "M" or Th") STORED HERE FOR COMPARISON
         }
         timeCursor.close();
@@ -196,7 +184,6 @@ public class RoomListFragment extends Fragment {
                             startMinute = Integer.parseInt(databaseMin);
 
                             courseDays = dates.split(" ");
-                            //Log.d("TAG","START TIME: " + startHour + ":" + startMinute + "  " + "END TIME: " + endHour + ":" + endMinute);
 
                             //FILTER OUT ROOMS THAT HAVE CLASSES HAPPENING IN THEM RIGHT NOW
                             if (chooseRoom(cDay, cHour, cMinute, courseDays, startHour, startMinute, endHour, endMinute)) {
@@ -216,11 +203,7 @@ public class RoomListFragment extends Fragment {
                                 String key = Building + RoomNumber;
                                 Room test = mRoomHashMap.get(key);
 
-                                if (test != null) { //if that key is already present in the Hashmap
-                                    //Log.d("TAG", Building + RoomNumber + " already in list");
-                                }
-                                else {
-                                    //Log.d("TAG", Building + RoomNumber + " not in list.  Add.");
+                                if (test == null){
                                     mRoomArrayList.add(key);  //helps us reference hashmap
                                     mRoomHashMap.put(key, room);
                                 }
@@ -241,39 +224,12 @@ public class RoomListFragment extends Fragment {
                         while (mCursor.moveToNext());
                     }
                 }
-/*
-            //Fake Room, fake course
-            Room test = new Room();
-            test.setBuilding("RKC");
-            test.setRoomNum(5000);
-            String key = "RKC5000";
-            mRoomArrayList.add(key);  //helps us reference hashmap
-            mRoomHashMap.put(key, test);
-           Course c = new Course();
-            c.setTitle("Petty 101");
-            c.setClassTimes("15 00", "19 45");
-            c.addDay("S");
-            mRoomHashMap.get(key).addCourse(c);  //add course to room's mCourses list
-*/
-
 
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
-            mRoomAdapter = new RoomAdapter(getActivity(), mRoomHashMap, mRoomArrayList); //TODO
-            mRoomAdapter.setOnTapListener(new OnTapListener() {
-                @Override
-                public void OnTapView(int position) {
-                    Toast.makeText(getContext(), "Click to " + position, Toast.LENGTH_SHORT).show();
-                }
-            });
-            {
-                mRecyclerView.setHasFixedSize(true);
-                mRecyclerView.setLayoutManager(linearLayoutManager);
-                mRecyclerView.setAdapter(mRoomAdapter);
-
-            }
-
-
-
+            mRoomAdapter = new RoomAdapter(getActivity(), mRoomHashMap, mRoomArrayList);
+            mRecyclerView.setHasFixedSize(true);
+            mRecyclerView.setLayoutManager(linearLayoutManager);
+            mRecyclerView.setAdapter(mRoomAdapter);
     }
 }
 
