@@ -8,7 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
 /**
- * Created by sysadmin on 11/17/16.
+ * Created by Wren on 11/17/16.
  */
 
 public class RoomListActivity extends AppCompatActivity {
