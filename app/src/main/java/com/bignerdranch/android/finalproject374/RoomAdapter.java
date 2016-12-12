@@ -75,7 +75,8 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomViewHolder>{
             Course c = getNextCourse(ri);
             next = c.getTitle();
             String[] startTime = c.getClassTimes()[0].split(" ");
-            nextTime = "Free until " + startTime[0] + ":" + startTime[1];
+            String classTime = militaryTo12Hr(Integer.parseInt(startTime[0]), startTime[1]);
+            nextTime = "Free until " + classTime;
         }
         roomViewHolder.vRoom.setText(ri.getBuilding() + " " + ri.getRoomNum());
         roomViewHolder.vClassName.setText("Next class is " + next);
@@ -119,6 +120,7 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomViewHolder>{
     }
 
     public boolean isAfter(Course c, String cDay, int cHour, int cMin) {  //returns the name of the next class
+        //Log.d("DEBUG", "Is " + c.getTitle() + " after " + cDay + " " + cHour + " " + cMin);
         List<String> days = c.getDays();
         String[] times = c.getClassTimes();
         String start = times[0];  //"HH mm"
@@ -131,10 +133,12 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomViewHolder>{
 
             if (cDay.equalsIgnoreCase(c.getDays().get(i))) {//if cDay == the day of the course
                 if (cHour < startHr) {  //is the class starts later hour than current time
+                    //Log.d("DEBUG", "Yes, " + cHour + " < " + startHr);
 
                     return true;
 
-                } else if (cMin < startMin) {  //if class starts the same hour but later minute than current time
+                } else if ((cHour == startHr) && (cMin < startMin)) {  //if class starts the same hour but later minute than current time
+                    //Log.d("DEBUG", "Yes, " + cHour + " " + cMin + " < " + startHr + " " + startMin);
 
                     return true;
                 }
@@ -142,6 +146,21 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomViewHolder>{
         }
         return false;  //if course does not occur during current day, then it is not happening anytime later today
 
+    }
+
+    public String militaryTo12Hr(int hrs, String mins) { //translates military time to 12-hour format
+        if  (hrs < 12) {
+            return hrs + ":" + mins + " AM";
+        }
+        else if (hrs == 12) {
+            return hrs + ":" + mins + " PM";
+        }
+        else if (hrs == 24) {
+            return 12 + ":" + mins + " AM";
+        }
+        else {
+            return (hrs % 12) + ":" + mins + " PM";
+        }
     }
 
 
