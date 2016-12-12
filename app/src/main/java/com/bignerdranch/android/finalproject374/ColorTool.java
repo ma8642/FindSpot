@@ -4,7 +4,7 @@ import android.graphics.Color;
 import android.util.Log;
 
 /**
- * Created by cs374 on 11/6/16.
+ * Created by Alford on 11/6/16.
  */
 
 public class ColorTool {
