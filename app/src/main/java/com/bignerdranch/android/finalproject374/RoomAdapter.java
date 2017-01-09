@@ -1,23 +1,21 @@
 package com.bignerdranch.android.finalproject374;
 
 import android.app.Activity;
-import android.support.v4.app.FragmentActivity;
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.content.ContentResolver;
+import android.content.Context;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.StringTokenizer;
 
 /**
  * Created by Wren on 12/4/2016.
@@ -27,13 +25,15 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomViewHolder>{
 
 
     private Activity mActivity;
+    private Context mContext;
     List<String> mIndices = Collections.emptyList();  //List that is the same size as hashmap so that we can reference a hashmap key using array index
     HashMap<String, Room> mRooms;
     HashMap<String, String> mWeekAcronym;
     private OnTapListener OnTapListener;
 
-    public RoomAdapter(Activity activity, HashMap<String, Room> mRooms, List<String> mIndices){
+    public RoomAdapter(Activity activity, Context context, HashMap<String, Room> mRooms, List<String> mIndices){
         this.mActivity = activity;
+        this.mContext = context;
         this.mIndices = mIndices;
         this.mRooms = mRooms;
         mWeekAcronym = new HashMap<String, String>()
@@ -68,8 +68,8 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomViewHolder>{
 
         String key = mIndices.get(i);
         Room ri = mRooms.get(key);
-        String next = "none";
-        String nextTime = "Free for the rest of the day.";
+        String next = mContext.getString(R.string.next_class_none);
+        String nextTime = mContext.getString(R.string.free_all_day);
 
         if (getNextCourse(ri) != null) {
             Course c = getNextCourse(ri);
@@ -162,7 +162,6 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomViewHolder>{
             return (hrs % 12) + ":" + mins + " PM";
         }
     }
-
 
     public void setOnTapListener(OnTapListener onTapListener) {
         this.OnTapListener = onTapListener;

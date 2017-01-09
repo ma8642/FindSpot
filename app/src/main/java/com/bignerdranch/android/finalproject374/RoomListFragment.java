@@ -159,16 +159,16 @@ public class RoomListFragment extends Fragment {
                     if (mCursor.moveToFirst()) {
                         do {
                             //GET TITLE
-                            String courseName = mCursor.getString(mCursor.getColumnIndexOrThrow("Course Name"));
+                            String courseName = mCursor.getString(mCursor.getColumnIndexOrThrow(getString(R.string.course_name)));
 
                             //GET DATES AND START AND END TIME
-                            String dates = mCursor.getString(mCursor.getColumnIndexOrThrow("Dates"));
-                            String startTime = mCursor.getString(mCursor.getColumnIndexOrThrow("Start_time"));
-                            String endTime = mCursor.getString(mCursor.getColumnIndexOrThrow("End_time"));
+                            String dates = mCursor.getString(mCursor.getColumnIndexOrThrow(getString(R.string.course_dates)));
+                            String startTime = mCursor.getString(mCursor.getColumnIndexOrThrow(getString(R.string.course_start_time)));
+                            String endTime = mCursor.getString(mCursor.getColumnIndexOrThrow(getString(R.string.course_end_time)));
 
                             //GET ROOM NAME
-                            String Building = mCursor.getString(mCursor.getColumnIndexOrThrow("Building"));
-                            Integer RoomNumber = mCursor.getInt(mCursor.getColumnIndexOrThrow("Room Number"));
+                            String Building = mCursor.getString(mCursor.getColumnIndexOrThrow(getString(R.string.course_building_name)));
+                            Integer RoomNumber = mCursor.getInt(mCursor.getColumnIndexOrThrow(getString(R.string.course_room_number)));
 
                             //add AM to morning time && add PM to afternoon time
                             databaseTimeSplit2 = endTime.split(" ");
@@ -226,7 +226,7 @@ public class RoomListFragment extends Fragment {
                 }
 
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
-            mRoomAdapter = new RoomAdapter(getActivity(), mRoomHashMap, mRoomArrayList);
+            mRoomAdapter = new RoomAdapter(getActivity(), getContext(), mRoomHashMap, mRoomArrayList);
             mRecyclerView.setHasFixedSize(true);
             mRecyclerView.setLayoutManager(linearLayoutManager);
             mRecyclerView.setAdapter(mRoomAdapter);

@@ -1,10 +1,5 @@
 package com.bignerdranch.android.finalproject374;
 
-/**
- * Created by sysadmin on 11/29/16.
- */
-
-
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -47,9 +42,7 @@ public class DatabaseHelper extends SQLiteAssetHelper {
 
     public void checkAndCoptDatabase(){
         boolean dbExist = checkDatabase();
-        if (dbExist){
-            Log.d("TAG", "Databse already exists");
-        }else{
+        if (dbExist == false){
             this.getReadableDatabase();
         }
         try {

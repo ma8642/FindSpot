@@ -1,3 +1,17 @@
 <resources>
     <string name="app_name">Find Spot</string>
+    <!--Main Fragment-->
+    <string name="welcome_prompt">Select a building</string>
+    <string name="bldg1">RKC</string>
+    <string name="bldg2">Olin</string>
+    <!--Room List Fragment-->
+    <string name="course_name">Course Name</string>
+    <string name="course_dates">Dates</string>
+    <string name="course_start_time">Start_time</string>
+    <string name="course_end_time">End_time</string>
+    <string name="course_building_name">Building</string>
+    <string name="course_room_number">Room Number</string>
+    <!--Room Adapter-->
+    <string name="next_class_none">NONE</string>
+    <string name="free_all_day">Free for the rest of the day.</string>
 </resources>

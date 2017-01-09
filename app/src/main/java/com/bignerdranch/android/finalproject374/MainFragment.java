@@ -1,12 +1,9 @@
 package com.bignerdranch.android.finalproject374;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.support.v4.app.BundleCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -24,9 +21,8 @@ import android.view.View.OnTouchListener;
  */
 
 public class MainFragment extends Fragment implements OnTouchListener {
-    //Context context;
 
-    String TAG = "mainFragmentString";
+    String TAG = "extra";
     private static final String KEY_INDEX = "index"; //to help retain data across rotation
     private static final String KEY_SHOWN = "shown";
     private String buildingClicked;
@@ -55,12 +51,11 @@ public class MainFragment extends Fragment implements OnTouchListener {
         //setBuildingClicked("None");  //user has not clicked a building yet
 
         if (toastShown == false) {
-            toast("Select a building");
+            toast(getString(R.string.welcome_prompt));
             toastShown = true;
         }
 
         if (savedInstanceState != null) {
-            //buildingClicked = savedInstanceState.getString(KEY_INDEX);
             toastShown = savedInstanceState.getBoolean(KEY_SHOWN);
         }
 
@@ -94,9 +89,9 @@ public class MainFragment extends Fragment implements OnTouchListener {
                 if (ct.closeMatch (-3079405, touchColor, tolerance))
                 {
                     // open RKC Fragment
-                    setBuildingClicked("RKC");
+                    setBuildingClicked(getString(R.string.bldg1));
                     Intent i = new Intent(getActivity(), RoomListActivity.class);
-                    i.putExtra("extra", buildingClicked);
+                    i.putExtra(TAG, buildingClicked);
                     startActivity(i);
 
                 }
@@ -104,9 +99,9 @@ public class MainFragment extends Fragment implements OnTouchListener {
                 else if (ct.closeMatch (-802735, touchColor, tolerance))
                 {
                     //open Olin Fragment
-                    setBuildingClicked("OLIN");
+                    setBuildingClicked(getString(R.string.bldg2));
                     Intent i = new Intent(getActivity(), RoomListActivity.class);
-                    i.putExtra("extra", buildingClicked);
+                    i.putExtra(TAG, buildingClicked);
                     startActivity(i);
                 }
 
@@ -121,7 +116,6 @@ public class MainFragment extends Fragment implements OnTouchListener {
 
 
     public int getHotspotColor (int hotspotId, int x, int y) {
-        Log.d(TAG, "called getHotspotColor");
         ImageView img = (ImageView) getView().findViewById(hotspotId);
         img.setDrawingCacheEnabled(true);
         Bitmap hotspots = Bitmap.createBitmap(img.getDrawingCache());
@@ -138,7 +132,6 @@ public class MainFragment extends Fragment implements OnTouchListener {
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
-        Log.i(TAG, "onSaveInstanceState");
         savedInstanceState.putString(KEY_INDEX, buildingClicked);
         savedInstanceState.putBoolean(KEY_SHOWN, toastShown);
     }
