@@ -1,4 +1,4 @@
-package com.bignerdranch.android.finalproject374;
+package com.bignerdranch.android.FindSpot;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteException;
