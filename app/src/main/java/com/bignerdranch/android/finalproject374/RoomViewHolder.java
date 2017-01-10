@@ -1,4 +1,4 @@
-package com.bignerdranch.android.finalproject374;
+package com.bignerdranch.android.FindSpot;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
