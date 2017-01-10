@@ -1,4 +1,4 @@
-package com.bignerdranch.android.finalproject374;
+package com.bignerdranch.android.FindSpot;
 
 /**
  * Created by Wren on 12/6/2016.
