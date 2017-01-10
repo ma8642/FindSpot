@@ -1,4 +1,4 @@
-package com.bignerdranch.android.finalproject374;
+package com.bignerdranch.android.FindSpot;
 
 import java.util.ArrayList;
 import java.util.Date;
